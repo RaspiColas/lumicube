@@ -7,8 +7,12 @@ import random, time
 delay = 0.02
 pixel_nb = 5
 iteration_nb = 128
+colors = [red, orange, green, blue, yellow]
 
 def bounce(x, vx):
+	""" 
+		Returns the new coordinate and vector after bouncing
+	"""
 	x += vx
 	if x >= 16:
 		x = 30 - x
@@ -20,6 +24,9 @@ def bounce(x, vx):
 
 
 def next_pixel(pixel, vector):
+	""" 
+		Returns the next pixel coordinates and vector  
+	"""
 	x, y = pixel
 	vx, vy = vector
 	x1, vx = bounce(x, vx)
@@ -36,7 +43,10 @@ def next_pixel(pixel, vector):
 	return (x1, y1), (vx, vy)
 
 
-def interate_color(c):
+def iterate_pixel(c):
+	""" 
+		Iterates and displays the pixel number c
+	"""
 	pixel = pixels[c]
 	x = pixel['x']
 	y = pixel['y']
@@ -58,16 +68,18 @@ def interate_color(c):
 
 	return
 
-colors = [red, orange, green, blue, yellow]
 
+pixels = {}
 while True:
 	i = 0
-	pixels = {}
 	for c in range(pixel_nb):
+		panel = c % 3	# panel = 0 is front, panel = 1 is side, panel = 2 is top
+		dx = (panel % 2) * 8
+		dy = (panel // 2) * 8
 		pixels[c] = {
-			'color': colors[c % len(colors)],  #hsv_colour(random.random(), 1, 1),
-			'x': random.randint(0, 7) + c%2 * 8,
-			'y': random.randint(0, 7) + c%3 * 8,
+			'color': colors[c % len(colors)],  # if some fantasy in color is allowed, you can try that: hsv_colour(random.random(), 1, 1),
+			'x': random.randint(0, 7) + dx,
+			'y': random.randint(0, 7) + dy,
 			'vx': random.randint(0, 1)*2 - 1,
 			'vy': random.randint(0, 1)*2 - 1,
 			'x0': 0,
@@ -78,7 +90,7 @@ while True:
 
 	while i < iteration_nb:
 		for c in range(pixel_nb):
-			interate_color(c)
-			time.sleep(delay)
+			iterate_pixel(c)
+		time.sleep(delay)
 		i += 1
 
